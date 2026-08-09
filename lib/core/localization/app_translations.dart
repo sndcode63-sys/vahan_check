@@ -1,15 +1,24 @@
-import 'package:get/get.dart';
+/// Plain key -> translation-map holder (no GetX). Looked up through
+/// [AppTranslations.forLanguageCode] and exposed to the UI via
+/// `translationsProvider` / the `ref.tr(key)` extension in
+/// `translation_provider.dart`.
+class AppTranslations {
+  AppTranslations._();
 
-class AppTranslations extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-        'en_US': _en,
-        'hi_IN': _hi,
-        'ta_IN': _ta,
-        'te_IN': _te,
-        'bn_IN': _bn,
-        'gu_IN': _gu,
-      };
+  static const Map<String, Map<String, String>> _all = {
+    'en': _en,
+    'hi': _hi,
+    'ta': _ta,
+    'te': _te,
+    'bn': _bn,
+    'gu': _gu,
+  };
+
+  /// Returns the translation map for a language code (e.g. "en", "hi"),
+  /// falling back to English if the code isn't found.
+  static Map<String, String> forLanguageCode(String code) {
+    return _all[code] ?? _en;
+  }
 
   //  ENGLISH
   static const Map<String, String> _en = {

@@ -1,45 +1,61 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
+/// Same helpers as before, minus GetX. Snackbars/dialogs now need a
+/// [BuildContext] (via `ScaffoldMessenger` / `showDialog`) instead of
+/// `Get.snackbar` / `Get.dialog`.
 class AppUtils {
   AppUtils._();
 
   //  SNACKBARS
-  static void showSuccess(String message, {String title = "Success"}) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
+  static void showSuccess(BuildContext context, String message, {String title = "Success"}) {
+    _showSnackBar(
+      context,
+      message: message,
       backgroundColor: Colors.green.shade600,
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(12),
-      borderRadius: 10,
-      icon: const Icon(Icons.check_circle, color: Colors.white),
+      icon: Icons.check_circle,
     );
   }
 
-  static void showError(String message, {String title = "Error"}) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
+  static void showError(BuildContext context, String message, {String title = "Error"}) {
+    _showSnackBar(
+      context,
+      message: message,
       backgroundColor: Colors.red.shade600,
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(12),
-      borderRadius: 10,
-      icon: const Icon(Icons.error, color: Colors.white),
+      icon: Icons.error,
     );
   }
 
-  static void showInfo(String message, {String title = "Info"}) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
+  static void showInfo(BuildContext context, String message, {String title = "Info"}) {
+    _showSnackBar(
+      context,
+      message: message,
       backgroundColor: Colors.blueGrey.shade600,
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(12),
-      borderRadius: 10,
+    );
+  }
+
+  static void _showSnackBar(
+    BuildContext context, {
+    required String message,
+    required Color backgroundColor,
+    IconData? icon,
+  }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: backgroundColor,
+        margin: const EdgeInsets.all(12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        content: Row(
+          children: [
+            if (icon != null) Icon(icon, color: Colors.white),
+            if (icon != null) const SizedBox(width: 10),
+            Expanded(
+              child: Text(message, style: const TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -69,16 +85,18 @@ class AppUtils {
   }
 
   //  LOADING DIALOG
-  static void showLoadingDialog() {
-    if (Get.isDialogOpen ?? false) return;
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
+  static void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
       barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
     );
   }
 
-  static void hideLoadingDialog() {
-    if (Get.isDialogOpen ?? false) Get.back();
+  static void hideLoadingDialog(BuildContext context) {
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
   }
 
   //  MISC

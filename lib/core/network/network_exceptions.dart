@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
 
-/// Saari DioException yaha handle hoti hai aur ek clean readable
-/// String message me convert ho jaati hai. ApiClient ke andar hi use hota hai.
 class NetworkExceptions {
   NetworkExceptions._();
 

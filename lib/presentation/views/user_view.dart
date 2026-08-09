@@ -1,38 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../controllers/user_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../providers/user_provider.dart';
+import '../widgets/language_bottom_sheet.dart';
 
-class UserView extends GetView<UserController> {
+/// Was `GetView<UserController>` + `Obx`; now a `ConsumerWidget` watching
+/// `userProvider`. Spacing uses flutter_screenutil (`.w/.h/.sp`) instead of
+/// manual `SizedBox`.
+class UserView extends ConsumerWidget {
   const UserView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile")),
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final user = controller.user.value;
-        if (user == null) {
-          return const Center(child: Text("No user data"));
-        }
-
-        return Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Name: ${user.name}", style: const TextStyle(fontSize: 18)),
-              const SizedBox(height: 8),
-              Text("Email: ${user.email}", style: const TextStyle(fontSize: 16)),
-            ],
+      appBar: AppBar(
+        title: const Text("Profile"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () => showLanguagePicker(context, ref),
           ),
-        );
-      }),
+        ],
+      ),
+      body: Builder(
+        builder: (context) {
+          if (userState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final user = userState.user;
+          if (user == null) {
+            return Center(
+              child: Text(
+                "No user data",
+                style: TextStyle(fontSize: 16.sp),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Name: ${user.name}", style: TextStyle(fontSize: 18.sp)),
+                SizedBox(height: 8.h),
+                Text("Email: ${user.email}", style: TextStyle(fontSize: 16.sp)),
+              ],
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => controller.fetchProfile(),
+        onPressed: () => ref.read(userProvider.notifier).fetchProfile(),
         child: const Icon(Icons.refresh),
       ),
     );
