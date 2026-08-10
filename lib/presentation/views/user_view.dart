@@ -4,9 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../providers/user_provider.dart';
 import '../widgets/language_bottom_sheet.dart';
 
-/// Was `GetView<UserController>` + `Obx`; now a `ConsumerWidget` watching
-/// `userProvider`. Spacing uses flutter_screenutil (`.w/.h/.sp`) instead of
-/// manual `SizedBox`.
+
 class UserView extends ConsumerWidget {
   const UserView({super.key});
 

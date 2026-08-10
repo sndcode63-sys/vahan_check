@@ -5,8 +5,7 @@ import '../../core/localization/app_languages.dart';
 import '../../core/localization/translation_provider.dart';
 import '../providers/language_provider.dart';
 
-/// Was `Get.bottomSheet` + `Obx`; now `showModalBottomSheet` + a
-/// `Consumer` watching `languageProvider`.
+
 void showLanguagePicker(BuildContext context, WidgetRef ref) {
   showModalBottomSheet(
     context: context,

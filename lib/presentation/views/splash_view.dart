@@ -7,10 +7,7 @@ import '../../core/localization/translation_provider.dart';
 import '../../core/utils/token_storage.dart';
 import '../routes/app_routes.dart';
 
-/// Splash screen: shows the logo for a beat, checks whether a token is
-/// already stored (via `TokenStorage`, kept exactly as provided), then
-/// routes to the right place. Sizing uses flutter_screenutil (`.w` / `.h`
-/// / `.sp`) instead of hand-written `SizedBox`es.
+
 class SplashView extends ConsumerStatefulWidget {
   const SplashView({super.key});
 
@@ -34,9 +31,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
     final token = results[0] as String?;
     if (!mounted) return;
 
-    // No dedicated login route wired up yet, so both branches land on
-    // `AppRoutes.user` for now — swap the first branch to
-    // `AppRoutes.login` once that screen exists.
+
     if (token != null && token.isNotEmpty) {
       context.go(AppRoutes.user);
     } else {

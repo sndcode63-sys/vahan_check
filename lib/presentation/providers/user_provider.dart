@@ -29,10 +29,7 @@ class UserState {
   }
 }
 
-/// Same responsibilities as the old GetX `UserController`, rewritten as a
-/// Riverpod [Notifier]. Screens read/react to it with
-/// `ref.watch(userProvider)` and call actions with
-/// `ref.read(userProvider.notifier).login(...)`.
+
 class UserNotifier extends Notifier<UserState> {
   final UserRepository _userRepository = UserRepository();
 

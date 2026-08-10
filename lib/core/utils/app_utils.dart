@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Same helpers as before, minus GetX. Snackbars/dialogs now need a
-/// [BuildContext] (via `ScaffoldMessenger` / `showDialog`) instead of
-/// `Get.snackbar` / `Get.dialog`.
+
 class AppUtils {
   AppUtils._();
 
